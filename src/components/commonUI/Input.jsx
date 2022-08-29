@@ -1,24 +1,27 @@
 import React, { forwardRef } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { AccentColor, GrayScale } from "../../assets/colorSystem";
 
 const Input = forwardRef((props, ref) => {
   return (
-    <Styles.Wrap>
+    <Styles.Wrap {...props}>
       <label htmlFor={props.id}>
         {props.label}
         <span className="required">{props.required && "*"}</span>
         <span className="description">{props?.description}</span>
       </label>
       {props?.inputType ? (
-        <textarea />
+        <textarea ref={ref} id={props.id} />
       ) : (
-        <input
-          type="text"
-          placeholder={props?.placeholder}
-          ref={ref}
-          id={props.id}
-        />
+        <>
+          <input
+            type="text"
+            placeholder={props?.placeholder}
+            ref={ref}
+            id={props.id}
+          />
+          {props.unit ? <span className="unit">{props.unit}</span> : ""}
+        </>
       )}
     </Styles.Wrap>
   );
@@ -42,6 +45,7 @@ const Styles = {
         margin-left: 10px;
         font-size: 12px;
         color: ${GrayScale.MiddleGray};
+        vertical-align: bottom;
       }
     }
     input,
@@ -54,9 +58,20 @@ const Styles = {
       &::placeholder {
         color: ${GrayScale.MiddleGray};
       }
+      ${(props) =>
+        props.medium &&
+        css`
+          width: 170px;
+        `}
     }
     textarea {
       resize: none;
+      height: 100px;
+    }
+    .unit {
+      vertical-align: sub;
+      margin-left: 6px;
+      color: ${GrayScale.MiddleGray};
     }
   `,
 };

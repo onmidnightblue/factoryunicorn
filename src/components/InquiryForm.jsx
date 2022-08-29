@@ -1,12 +1,8 @@
 import React, { useRef, useState } from "react";
 import styled from "styled-components";
-import {
-  AccentColor,
-  BackGroundColor,
-  GrayScale,
-  MainColor,
-} from "../assets/colorSystem";
+import { AccentColor, BackGroundColor, MainColor } from "../assets/colorSystem";
 import Input from "./commonUI/Input";
+import Radio from "./commonUI/Radio";
 
 const InquiryForm = () => {
   const userNameRef = useRef();
@@ -15,22 +11,10 @@ const InquiryForm = () => {
   const sizeRef = useRef();
   const quantityRef = useRef();
   const etcRef = useRef();
+  const locationRef = useRef();
+  const bgcColorRef = useRef();
 
-  // label type
-  const tabs = [
-    {
-      title: "메인 라벨",
-      content: 1,
-    },
-    {
-      title: "케어 라벨",
-      content: 2,
-    },
-    {
-      title: "포인트 라벨",
-      content: 3,
-    },
-  ];
+  // tab
   const goToAnotherTabHandler = (index) => {
     setTabIndex(index);
   };
@@ -39,10 +23,63 @@ const InquiryForm = () => {
   const getUserInquiryHendler = (event) => {
     event.preventDefault();
 
-    console.log(userNameRef.current.value);
-    console.log(userPhoneRef.current.value);
-    console.log(tabs[tabIndex].title);
+    console.log(
+      userNameRef.current.value,
+      userPhoneRef.current.value,
+      tabs[tabIndex].title,
+      sizeRef.current.value,
+      quantityRef.current.value,
+      etcRef.current.value
+    );
   };
+
+  // label type
+  const tabs = [
+    {
+      title: "메인 라벨",
+      content: (
+        <>
+          <Styles.TypeDetail>
+            <span>재질</span>
+            <div>
+              <Radio id="weave" title="직조" name="quality" checked />
+              <Radio id="silk" title="실크" name="quality" />
+            </div>
+            <span>형태</span>
+            <div>
+              <Radio id="double" title="양접이" name="shape" checked />
+              <Radio id="half" title="반접이" name="shape" />
+            </div>
+          </Styles.TypeDetail>
+        </>
+      ),
+    },
+    {
+      title: "케어 라벨",
+      content: (
+        <Styles.TypeDetail>
+          <span>재질</span>
+          <Radio id="silk" title="실크" name="quality" checked />
+          <label htmlFor="location">부착 위치</label>
+          <Styles.TypeDetailInput id={"location"} ref={locationRef} />
+        </Styles.TypeDetail>
+      ),
+    },
+    {
+      title: "포인트 라벨",
+      content: (
+        <Styles.TypeDetail>
+          <span>재질</span>
+          <div>
+            <Radio id="weave" title="직조" name="quality" checked />
+            <Radio id="silk" title="실크" name="quality" />
+          </div>
+          <label htmlFor="bgcColor">배경 색상</label>
+          <Styles.TypeDetailInput id="bgcColor" ref={bgcColorRef} />
+        </Styles.TypeDetail>
+      ),
+    },
+  ];
 
   return (
     <Styles.Wrap>
@@ -89,7 +126,9 @@ const InquiryForm = () => {
               ref={sizeRef}
               label={"라벨 크기"}
               required={true}
-              placeholder={"1000"}
+              placeholder={"가로x세로"}
+              medium={true}
+              unit={"cm"}
             />
           </div>
           <div className="row">
@@ -101,6 +140,9 @@ const InquiryForm = () => {
               ref={quantityRef}
               label={"수량"}
               required={true}
+              placeholder={"1000"}
+              medium={true}
+              unit={"장"}
             />
           </div>
           <div className="row">
@@ -191,9 +233,23 @@ const Styles = {
         color: #fff;
         border: none;
         background-color: ${MainColor};
-        margin-top: 60px;
+        margin: 60px 0;
         cursor: pointer;
       }
+    }
+  `,
+  TypeDetail: styled.div`
+    display: grid;
+    grid-template-columns: 100px auto;
+    row-gap: 20px;
+  `,
+  TypeDetailInput: styled(Input)`
+    span {
+      display: none;
+    }
+    label {
+      margin-bottom: 0;
+      display: block;
     }
   `,
 };

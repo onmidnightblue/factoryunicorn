@@ -60,3 +60,6 @@ textarea:focus {
 	outline: none;
 }
 
+:root {
+	accent-color: #4D66F7;
+}
