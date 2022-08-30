@@ -1,13 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import AdminContainer from "./containers/AdminContainer";
-import InquiryContainer from "./containers/InquiryContainer";
+import InquiryPage from "./pages/InquiryPage";
+import AdminPage from "./pages/AdminPage";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<InquiryContainer />} />
-        <Route path="/admin" element={<AdminContainer />} />
+        <Route path="/" element={<InquiryPage />} />
+        <Route path="/admin" element={<AdminPage />} />
       </Routes>
     </BrowserRouter>
   );

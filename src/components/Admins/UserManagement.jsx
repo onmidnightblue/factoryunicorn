@@ -1,22 +1,48 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { GrayScale, MainColor } from "../../assets/colorSystem";
+import useHttp from "../../hooks/useHttp";
+import { checkedPhone } from "../../utils/checkedInput";
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
+  const phoneRef = useRef();
+  const { isLoading, error, sendRequest: fetchUsers } = useHttp();
+
+  // useEffect(() => {
+  //   const transformUsers = (users) => {
+  //     const loadedUsers = [];
+
+  //     for (const user in users) {
+  //       loadedUsers.push({});
+  //     }
+  //   };
+  // }, [fetchUsers]);
+
+  const onSubmitHandler = (event) => {
+    event.preventDefault();
+    if (checkedPhone(phoneRef.current.value)) {
+      console.log(phoneRef.current.value);
+    }
+  };
 
   return (
     <>
-      <Styles.Form>
+      <Styles.Form onSubmit={onSubmitHandler}>
         <div className="input-wrap">
           <label htmlFor="phone">휴대폰 번호</label>
-          <input type="text" id="phone" />
+          <input
+            type="text"
+            id="phone"
+            ref={phoneRef}
+            placeholder="01012341234"
+          />
         </div>
         <button>조회</button>
       </Styles.Form>
       {users.length === 0 ? (
         <Styles.Empty>
-          <p>확인하고 싶은 사용자의 휴대폰 번호를 입력해주세요.</p>
+          <p>사용자의 휴대폰 번호를 입력해주세요.</p>
         </Styles.Empty>
       ) : (
         <Styles.List>
@@ -48,6 +74,9 @@ const Styles = {
         padding: 12px;
         width: 100%;
         box-sizing: border-box;
+        &::placeholder {
+          color: ${GrayScale.MiddleGray};
+        }
       }
     }
     button {
@@ -56,6 +85,7 @@ const Styles = {
       background-color: ${MainColor};
       border: none;
       color: #fff;
+      cursor: pointer;
     }
   `,
   List: styled.ul`

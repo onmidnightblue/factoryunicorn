@@ -15,7 +15,7 @@ const Admins = () => {
   // inquiry tab
   const tabs = [
     {
-      title: "유저 정보",
+      title: "사용자 정보",
       content: <UserManagement />,
     },
     {
@@ -46,10 +46,9 @@ const Admins = () => {
 // styled
 const Styles = {
   Wrap: styled.div`
-    max-width: 1170px;
+    max-width: 770px;
     margin: 0 auto;
     h3 {
-      font-size: 16px;
       text-align: center;
       font-weight: normal;
       margin: 40px 0;

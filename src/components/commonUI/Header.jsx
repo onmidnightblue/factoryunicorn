@@ -20,6 +20,8 @@ const Styles = {
     justify-content: center;
     align-items: center;
     background-color: ${(props) => (props.admin ? MainColor : "#fff")};
+    position: sticky;
+    top: 0;
     svg {
       path {
         fill: ${(props) => props.admin && "#fff"};

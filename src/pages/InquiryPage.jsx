@@ -1,8 +1,8 @@
 import React from "react";
 import Header from "../components/commonUI/Header";
-import InquiryForm from "../components/InquiryForm";
+import InquiryForm from "../components/Users/InquiryForm";
 
-const InquiryContainer = () => {
+const InquiryPage = () => {
   return (
     <>
       <Header />
@@ -11,4 +11,4 @@ const InquiryContainer = () => {
   );
 };
 
-export default InquiryContainer;
+export default InquiryPage;

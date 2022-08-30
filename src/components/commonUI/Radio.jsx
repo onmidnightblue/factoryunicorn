@@ -9,7 +9,9 @@ const Radio = (props) => {
         type="radio"
         id={props.id}
         name={props.name}
+        value={props.title}
         defaultChecked={props?.checked}
+        onChange={props.getValue}
       />
       <label htmlFor={props.id}>{props.title}</label>
     </Styles.Radio>
