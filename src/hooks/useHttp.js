@@ -1,5 +1,5 @@
-import axios from "axios";
 import React, { useCallback, useState } from "react";
+import axios from "axios";
 
 const useHttp = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -9,41 +9,39 @@ const useHttp = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const baseURL = "https://codingtest-a3770-default-rtdb.firebaseio.com/";
-      const response = await fetch(baseURL + requestConfig.url, {
-        method: requestConfig.method,
-        headers: requestConfig.headers,
-        body: requestConfig.body ? JSON.stringify(requestConfig.body) : null,
-      });
+      const baseURL =
+        "https://asia-northeast3-fu-webapp.cloudfunctions.net/api/codingTest/";
+      const accessKey = "kimsoojin";
 
-      if (!response.ok) {
-        throw new Error("Request failed!");
+      if (requestConfig.method === "GET") {
+        const params = requestConfig.params;
+        const response = await axios({
+          url: baseURL + requestConfig.url,
+          method: requestConfig.method,
+          params: requestConfig.params
+            ? { ...params, accessKey }
+            : { accessKey },
+        });
+        const data = await response.data;
+        applyData(data);
       }
-
-      const data = await response.json();
-      applyData(data);
+      if (requestConfig.method === "POST") {
+        const requestConfigData = requestConfig.data;
+        const response = await axios({
+          url: baseURL + requestConfig.url,
+          method: requestConfig.method,
+          data: requestConfig.data
+            ? { accessKey, ...requestConfigData }
+            : { accessKey },
+        });
+        const data = await response.data;
+        applyData(data);
+      }
     } catch (err) {
       setError(err.message || "Something went wrong!");
     }
     setIsLoading(false);
   }, []);
-
-  // const sendRequest = useCallback(async (requestConfig, applyData) => {
-  //   setIsLoading(true);
-  //   try {
-  //     const baseURL = "https://codingtest-a3770-default-rtdb.firebaseio.com/";
-  //     const response = await axios({
-  //       method: requestConfig.method,
-  //       url: baseURL + requestConfig.url,
-  //       body: requestConfig.body,
-  //     });
-  //     const data = await response.data;
-  //     applyData(data);
-  //   } catch (error) {
-  //     console.log(error);
-  //     setError(error.message || "Request failed");
-  //   }
-  // });
 
   return {
     isLoading,

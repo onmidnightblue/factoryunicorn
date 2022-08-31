@@ -7,6 +7,7 @@ import {
 } from "../../assets/colorSystem";
 import useHttp from "../../hooks/useHttp";
 import { checkedSize, checkedTrim } from "../../utils/checkedInput";
+import { getTime } from "../../utils/getTime";
 import Input from "../commonUI/Input";
 import Radio from "../commonUI/Radio";
 
@@ -21,7 +22,7 @@ const InquiryForm = () => {
   const sizeRef = useRef();
   const quantityRef = useRef();
   const etcRef = useRef();
-  const [submitComplete, setSubmitComplete] = useState(false);
+  const [submitForm, setSubmitForm] = useState(null);
   const { isLoading, error, sendRequest: sendFormRequest } = useHttp();
 
   // changed tab
@@ -67,6 +68,9 @@ const InquiryForm = () => {
       }
     }
 
+    // get time
+    const getSubmitTime = getTime();
+
     // gether form data
     if (userName && phone && type && detailType && size && quantity) {
       if (detailType?.quality) {
@@ -77,6 +81,7 @@ const InquiryForm = () => {
               phone,
             },
             inquiryInfo: {
+              time: getSubmitTime,
               type,
               detailType,
               size,
@@ -84,14 +89,12 @@ const InquiryForm = () => {
               etc: etcRef.current.value,
             },
           };
-          console.log(getInfo);
-          sendFormRequest({
-            url: "saveInquiry.json",
-            method: "POST",
-            body: getInfo,
-          });
-          setSubmitComplete(true);
+          setSubmitForm(getInfo);
+        } else {
+          console.log("error");
         }
+      } else {
+        console.log("error");
       }
     } else {
       console.log("error");
@@ -102,6 +105,23 @@ const InquiryForm = () => {
   useEffect(() => {
     setType(tabs[tabIndex].title);
   }, [tabIndex]);
+
+  // post user's data
+  useEffect(() => {
+    if (!submitForm) return;
+    if (submitForm) {
+      sendFormRequest({
+        url: "saveUser",
+        method: "POST",
+        data: { phone: submitForm.userInfo.phone },
+      });
+      sendFormRequest({
+        url: "saveInquiry",
+        method: "POST",
+        data: submitForm,
+      });
+    }
+  }, [submitForm]);
 
   // label type
   const tabs = [
@@ -188,10 +208,8 @@ const InquiryForm = () => {
 
   return (
     <Styles.Wrap>
-      {submitComplete ? (
-        <>
-          <h3>라벨 제작 문의가 완료되었습니다.</h3>
-        </>
+      {submitForm ? (
+        <h3>라벨 제작 문의가 완료되었습니다.</h3>
       ) : (
         <>
           <h3>라벨을 제작하기 위해 아래 항목들을 입력해주세요.</h3>
@@ -210,7 +228,7 @@ const InquiryForm = () => {
                   ref={userPhoneRef}
                   label={"휴대폰 번호"}
                   required={true}
-                  placeholder={"01012341234"}
+                  placeholder={"010-1234-1234"}
                 />
               </div>
               <div className="row type">
@@ -348,6 +366,9 @@ const Styles = {
         margin: 60px 0;
         cursor: pointer;
       }
+    }
+    @media screen and (max-width: 770px) {
+      padding: 0 10px;
     }
   `,
   TypeDetail: styled.div`

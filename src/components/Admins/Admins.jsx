@@ -73,6 +73,9 @@ const Styles = {
     .content {
       margin-top: 40px;
     }
+    @media screen and (max-width: 770px) {
+      padding: 0 10px;
+    }
   `,
 };
 

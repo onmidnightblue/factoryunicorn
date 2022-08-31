@@ -1,38 +1,78 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { GrayScale, MainColor, SubColor } from "../../assets/colorSystem";
+import { GrayScale, MainColor } from "../../assets/colorSystem";
+import useHttp from "../../hooks/useHttp";
 import Modal from "../commonUI/Modal";
 
 const InquiryManagement = () => {
-  const [detailInfo, setDetailInfo] = useState();
+  const [inquiries, setInquiries] = useState([]);
+  const [inquiry, setInquiry] = useState({});
+  const [openDetailInfo, setOpenDetailInfo] = useState();
+  const { sendRequest: fetchInquiries } = useHttp();
+  const { sendRequest: fetchInquiry } = useHttp();
 
-  // detail info
-  const getDetailInfo = () => {
-    setDetailInfo(true);
-  };
   const modalClose = () => {
-    setDetailInfo(false);
+    setOpenDetailInfo(false);
+  };
+
+  // get inquiries data
+  useEffect(() => {
+    const transformInquiries = (datas) => {
+      const getInquiries = Object.values(datas);
+      setInquiries(getInquiries);
+    };
+
+    fetchInquiries(
+      {
+        url: "getEntireInquiry",
+        method: "GET",
+      },
+      transformInquiries
+    );
+  }, []);
+
+  // get inquiry data
+  const getDetailInfo = (index) => {
+    setOpenDetailInfo(true);
+
+    const transformInquiry = (datas) => {
+      const getInquiry = datas;
+      setInquiry(getInquiry);
+    };
+
+    fetchInquiry(
+      {
+        url: "getSingleInquiry",
+        method: "GET",
+        params: { uid: index },
+      },
+      transformInquiry
+    );
   };
 
   return (
     <Styles.List>
       <li className="th">
-        <div>사용자 번호</div>
         <div>주문 날짜</div>
+        <div>라벨 타입</div>
+        <div>라벨 사이즈</div>
+        <div>수량</div>
         <div>상세 정보</div>
-        <div>진행 상황</div>
       </li>
-      <li>
-        <div>01012341234</div>
-        <div>2022.08.30</div>
-        <div className="link">
-          <span onClick={getDetailInfo}>상세 정보 보기</span>
-        </div>
-        <div className="state">
-          <span className="prev">접수</span>
-        </div>
-      </li>
-      {detailInfo && <Modal close={modalClose} />}
+      {inquiries.map((inquiry, index) => (
+        <li key={index}>
+          <div>{inquiry.time}</div>
+          <div>{inquiry.type}</div>
+          <div>{inquiry.size}</div>
+          <div>{inquiry.quantity}</div>
+          <div className="link">
+            <span onClick={() => getDetailInfo(inquiry.uid)}>
+              상세 정보 보기
+            </span>
+          </div>
+        </li>
+      ))}
+      {openDetailInfo && <Modal close={modalClose} datas={inquiry} />}
     </Styles.List>
   );
 };
@@ -47,7 +87,7 @@ const Styles = {
       width: 100%;
       border-bottom: 1px solid ${GrayScale.LightGray};
       display: grid;
-      grid-template-columns: 20% 20% 48% 12%;
+      grid-template-columns: repeat(5, 1fr);
       &.th {
         border-bottom: 1px solid ${GrayScale.MiddleGray};
         div {
@@ -90,23 +130,14 @@ const Styles = {
         &.state {
           span {
             border-radius: 100px;
-            border: 1px solid ${GrayScale.DarkGray};
             box-sizing: border-box;
             width: 80px;
             height: 30px;
             display: inline-flex;
             justify-content: center;
             align-items: center;
-            &.prev {
-              background-color: ${MainColor};
-              color: #fff;
-              border: none;
-            }
-            &.ing {
-              background-color: ${SubColor};
-              color: #fff;
-              border: none;
-            }
+            background-color: ${MainColor};
+            color: #fff;
           }
         }
       }
