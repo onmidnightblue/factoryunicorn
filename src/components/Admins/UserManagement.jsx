@@ -8,7 +8,7 @@ const UserManagement = () => {
   const [findedUsers, setFindedUsers] = useState(null);
   const [userPhone, setUserPhone] = useState("");
   const phoneRef = useRef();
-  const { isLoading, error, sendRequest: fetchUsers } = useHttp();
+  const { sendRequest: fetchUsers } = useHttp();
 
   const onSubmitHandler = (event) => {
     event.preventDefault();

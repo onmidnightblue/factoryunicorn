@@ -23,7 +23,7 @@ const InquiryForm = () => {
   const quantityRef = useRef();
   const etcRef = useRef();
   const [submitForm, setSubmitForm] = useState(null);
-  const { isLoading, error, sendRequest: sendFormRequest } = useHttp();
+  const { sendRequest: sendFormRequest } = useHttp();
 
   // changed tab
   const goToAnotherTabHandler = (index) => {

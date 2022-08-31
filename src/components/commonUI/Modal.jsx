@@ -11,42 +11,45 @@ const Modal = (props) => {
   return (
     <>
       {ReactDOM.createPortal(
-        <Styles.Wrap>
-          <div className="close" onClick={props.close}>
-            <Close />
-          </div>
-          <ul>
-            <li>
-              <div className="th">주문 날짜</div>
-              <div className="td">{data?.time}</div>
-            </li>
-            <li>
-              <div className="th">라벨 종류</div>
-              <div className="td">{data?.type}</div>
-            </li>
-            <li>
-              <div className="th">세부 정보</div>
-              <div className="td">
-                {detailType?.quality} /{" "}
-                {detailType?.shape ||
-                  detailType?.location ||
-                  detailType?.bgcColor}
-              </div>
-            </li>
-            <li>
-              <div className="th">라벨 크기</div>
-              <div className="td">{data?.size}</div>
-            </li>
-            <li>
-              <div className="th">수량</div>
-              <div className="td">{data?.quantity}</div>
-            </li>
-            <li>
-              <div className="th">요청 사항</div>
-              <div className="td">{data?.etc}</div>
-            </li>
-          </ul>
-        </Styles.Wrap>,
+        <>
+          <Styles.Backdrop onClick={props.close} />
+          <Styles.Wrap>
+            <div className="close" onClick={props.close}>
+              <Close />
+            </div>
+            <ul>
+              <li>
+                <div className="th">주문 날짜</div>
+                <div className="td">{data?.time}</div>
+              </li>
+              <li>
+                <div className="th">라벨 종류</div>
+                <div className="td">{data?.type}</div>
+              </li>
+              <li>
+                <div className="th">세부 정보</div>
+                <div className="td">
+                  {detailType?.quality} /{" "}
+                  {detailType?.shape ||
+                    detailType?.location ||
+                    detailType?.bgcColor}
+                </div>
+              </li>
+              <li>
+                <div className="th">라벨 크기</div>
+                <div className="td">{data?.size}</div>
+              </li>
+              <li>
+                <div className="th">수량</div>
+                <div className="td">{data?.quantity}</div>
+              </li>
+              <li>
+                <div className="th">요청 사항</div>
+                <div className="td">{data?.etc}</div>
+              </li>
+            </ul>
+          </Styles.Wrap>
+        </>,
         document.getElementById("modal")
       )}
     </>
@@ -55,6 +58,11 @@ const Modal = (props) => {
 
 // styled
 const Styles = {
+  Backdrop: styled.div`
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+  `,
   Wrap: styled.div`
     width: 770px;
     position: fixed;
